@@ -13,6 +13,20 @@ import { CourseWithTNDto } from 'app/shared/model/courseWithTN-dto.model';
     styleUrls: ['home.css']
 })
 export class HomeComponent implements OnInit {
+    course: CourseWithTNDto = {
+        courseName: '',
+        courseContent: '',
+        courseLocation: '',
+        teacherName: ''
+    };
+
+    courseUpdate: CourseDto = {
+        courseName: '',
+        courseContent: '',
+        courseLocation: '',
+        courseTeacher: ''
+    };
+
     account: Account;
     modalRef: NgbModalRef;
     classeNameNeedToReg: string;
@@ -71,11 +85,44 @@ export class HomeComponent implements OnInit {
         });
     }
 
-    // registerCourse(courseName) {
-    //
-    // }
+    registerCourse() {
+        this.courseService.add(this.course).subscribe(response => {
+            if (response.toString().localeCompare('OK') == 0) {
+                alert('Added Successfully');
+            } else {
+                alert('Failure to Add');
+            }
+        });
+    }
 
     clearAllCourses() {
         this.courses = [];
+    }
+
+    clearAllCourseTN() {
+        this.coursesWithTN = [];
+    }
+    update() {
+        this.courseService.update(this.courseUpdate).subscribe(response => {
+            if (response.toString().localeCompare('OK') == 0) {
+                alert('Updated Successfully');
+            } else {
+                alert('Failure to Update');
+            }
+        });
+    }
+
+    deleteCourse(course) {
+        let index = this.courses.indexOf(course, 0);
+        if (index > -1) {
+            this.courses.splice(index, 1);
+        }
+        this.courseService.delete(course.courseName).subscribe(response => {
+            if (response.toString().localeCompare('OK') == 0) {
+                alert('Deleted Successfully');
+            } else {
+                alert('Failure to Delete');
+            }
+        });
     }
 }
